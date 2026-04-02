@@ -1,0 +1,25 @@
+{
+  "name": "autoblogger",
+  "version": "1.0.0",
+  "description": "automatically update your website for blogging",
+  "main": "./src/main.ts",
+  "type": "module",
+  "scripts": {
+    "build": "npx tsc",
+    "dev": "node ./dist/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jadenvv/AutoBlogger.git"
+  },
+  "author": "Jaden V",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jadenvv/AutoBlogger/issues"
+  },
+  "homepage": "https://github.com/jadenvv/AutoBlogger#readme",
+  "dependencies": {
+    "puppeteer": "^24.40.0",
+    "typescript": "^6.0.2"
+  }
+}
