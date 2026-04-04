@@ -1,7 +1,6 @@
 import { fileURLToPath } from "url"
-import { env_vars } from "./init.ts"
 import githook from "./githook.ts"
-
+import { loadEnvFile } from "process";
 /* function lex_analysis(file: string): string[] {
   let prev: string = "";
   let index: number = 0;
@@ -19,14 +18,16 @@ import githook from "./githook.ts"
 
 }
 */
-function main(): void {
-  env_vars();
+async function main(): Promise<void> {
+  const repo = "OS";
+  await githook.initGithook(repo);
+  await githook.existRepo(repo);
 
-  githook.get_browser();
 
 }
 if (process.argv[1] == fileURLToPath(import.meta.url)) {
-  main();
+  loadEnvFile(".env")
+  await main();
 
 
 }

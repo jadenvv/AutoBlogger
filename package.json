@@ -19,8 +19,12 @@
   },
   "homepage": "https://github.com/jadenvv/AutoBlogger#readme",
   "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "puppeteer": "^24.40.0",
+    "express": "^5.2.1",
+    "octokit": "^5.0.5",
+    "public-ip": "^8.0.0",
     "typescript": "^6.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.2"
   }
 }

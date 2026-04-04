@@ -1,6 +1,9 @@
 # AutoBlogger
-
-
+# Getting Started 
+First, you need to create a token in order for autoblogger to communicate with github api so go to 
+``` 
+```https://github.com/settings/tokens/new?scopes=repo ```
+make sure that ```Admin:Repo_hook``` is checked off 
 
 ## NOTES ## 
 If you are on Ubuntu, if you are given the error 
