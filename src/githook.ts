@@ -1,15 +1,16 @@
 import { env } from "node:process";
 import { Octokit, App } from "octokit";
 import { publicIpv4 } from "public-ip"
+import { }
 type githook_t =
-  {
-    _octokit: Octokit;
-    _owner: undefined | string;
-    initGithook: (repo: string) => Promise<void>;
-    existRepo: (repo: string) => Promise<any>;
-    getOwner: () => void;
-    createWebHook: (repo: string) => Promise<any>;
-  };
+{
+  _octokit: Octokit;
+  _owner: undefined | string;
+  initGithook: (repo: string) => Promise<void>;
+  existRepo: (repo: string) => Promise<any>;
+  getOwner: () => void;
+  createWebHook: (repo: string) => Promise<any>;
+};
 const githook: githook_t
   = {
   _octokit: new Octokit({ auth: env.AUTH }),
@@ -32,6 +33,7 @@ const githook: githook_t
         config: {
           url: `http://${await publicIpv4()}/push`,
           content_type: 'json'
+
         },
       })
     return response;
