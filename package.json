@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/jadenvv/AutoBlogger#readme",
   "dependencies": {
+    "@octokit/types": "^16.0.0",
     "bcrypt": "^6.0.0",
     "express": "^5.2.1",
     "octokit": "^5.0.5",
