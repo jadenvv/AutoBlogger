@@ -1,32 +1,39 @@
 import { env } from "node:process";
 import { Octokit, App } from "octokit";
 import { publicIpv4 } from "public-ip"
-import { Endpoints } from "@octokit/types"
+import type { Endpoints , OctokitResponse} from "@octokit/types"
+type responseGitHooks= Endpoints["POST /repos/{owner}/{repo}/hooks"]["response"]
+type responseGitHooksExist = Endpoints["GET /"]
 type githook_t =
   {
     _octokit: Octokit;
     _owner: undefined | string;
     _alreadyExist: () => boolean;
     _repo: string | null;
-    initGithook: () => Promise<void>;
+    initGithook: (repo:string) => Promise<void>;
     existRepo: () => Promise<any>;
     getOwner: () => void;
-    createWebHook: () => Promise<any>;
+    createWebHook: () => Promise<OctokitResponse<responseGitHooks>>;
   };
 const githook: githook_t
   = {
   _octokit: new Octokit({ auth: env.AUTH }),
   _owner: undefined,
   _repo: null,
+  _alreadyExist: function (){
+	return false;
+  }, 
+
 
   initGithook: async function (repo: string) {
-    this.getOwner();
-    this.existRepo(repo);
     this._repo = repo;
+    this.getOwner();
+    await this.existRepo();
+
   },
-  createWebHook: async function (): Promise<any> {
-    const response = await this._octokit.request(
-      `POST /repos/${this._owner}/${repo}/hooks`,
+  createWebHook: async function (): Promise<OctokitResponse<responseGitHooks>> {
+    const response: OctokitResponse<responseGitHooks>= await this._octokit.request(
+      `POST /repos/${this._owner}/${this._repo}/hooks`,
       {
         owner: this._owner,
         repo: this._repo,
@@ -40,7 +47,6 @@ const githook: githook_t
         },
       })
     return response;
-
   },
   getOwner: function () {
     const own: undefined | string = env.USER;

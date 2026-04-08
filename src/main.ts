@@ -21,8 +21,8 @@ import { loadEnvFile } from "process";
 async function main(): Promise<void> {
   const repo = "AutoBlogger";
   await githook.initGithook(repo);
-  await githook.existRepo(repo);
-  await githook.createWebHook(repo);
+  await githook.existRepo();
+  await githook.createWebHook();
 
 
 }

@@ -1,4 +1,5 @@
-import { express } from express;
+import express from "express";
+import type {Request, Response} from "express"
 const app = express();
 const port = 4040;
 app.post("/push", (req: Request, res: Response) => {
