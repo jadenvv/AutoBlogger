@@ -1,28 +1,33 @@
 import { env } from "node:process";
 import { Octokit, App } from "octokit";
 import { publicIpv4 } from "public-ip"
-import type { Endpoints , OctokitResponse} from "@octokit/types"
-type responseGitHooks= Endpoints["POST /repos/{owner}/{repo}/hooks"]["response"]
-type responseGitHooksExist = Endpoints["GET /"]
+import { RequestError } from "@octokit/request-error"
+import type { Endpoints, OctokitResponse } from "@octokit/types"
+type responseGitHooks = Endpoints["POST /repos/{owner}/{repo}/hooks"]["response"]
 type githook_t =
   {
     _octokit: Octokit;
     _owner: undefined | string;
     _alreadyExist: () => boolean;
     _repo: string | null;
-    initGithook: (repo:string) => Promise<void>;
+    initGithook: (repo: string) => Promise<void>;
     existRepo: () => Promise<any>;
     getOwner: () => void;
-    createWebHook: () => Promise<OctokitResponse<responseGitHooks>>;
+    createWebHook: () => Promise<OctokitResponse<responseGitHooks> | null>;
   };
 const githook: githook_t
   = {
-  _octokit: new Octokit({ auth: env.AUTH }),
+  _octokit: new Octokit({ auth: "" }),
   _owner: undefined,
   _repo: null,
-  _alreadyExist: function (){
-	return false;
-  }, 
+  _alreadyExist: function () {
+    /*    const response = await this._octokit.request(
+          "GET ",
+          {}
+        );
+      */
+    return false;
+  },
 
 
   initGithook: async function (repo: string) {
@@ -31,21 +36,35 @@ const githook: githook_t
     await this.existRepo();
 
   },
-  createWebHook: async function (): Promise<OctokitResponse<responseGitHooks>> {
-    const response: OctokitResponse<responseGitHooks>= await this._octokit.request(
-      `POST /repos/${this._owner}/${this._repo}/hooks`,
-      {
-        owner: this._owner,
-        repo: this._repo,
-        name: this._repo,
-        active: true,
-        events: ["push"],
-        config: {
-          url: `http://${await publicIpv4()}:80/push`,
-          content_type: 'json'
+  createWebHook: async function (): Promise<OctokitResponse<responseGitHooks> | null> {
+    let response: OctokitResponse<responseGitHooks> | null = null;
+    try {
+      response = await this._octokit.request(
+        `POST /repos/${this._owner}/${this._repo}/hooks`,
+        {
+          owner: this._owner,
+          repo: this._repo,
+          name: "web",
+          active: true,
+          events: ["push"],
+          config: {
+            url: `https://nonfimbriated-unpolitical-elma.ngrok-free.dev/push`,
+            content_type: 'json',
 
-        },
-      })
+          },
+          headers: {
+            'X-GitHub-Api-Version': '2026-03-10'
+          }
+
+        })
+    }
+    catch (err) {
+      if (err instanceof RequestError) {
+        if (err.status === 422) {
+          console.log("hook already made procceeding")
+        }
+      }
+    }
     return response;
   },
   getOwner: function () {
