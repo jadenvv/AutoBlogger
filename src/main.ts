@@ -5,6 +5,7 @@ import type { Request, Response } from "express"
 const app = express();
 app.post("/push", (req: Request, res: Response) => {
   console.log("i am alive haha")
+  console.log(req)
 
 
 })
