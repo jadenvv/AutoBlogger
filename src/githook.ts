@@ -30,6 +30,7 @@ const githook: githook_t
     if (!("content" in response))
       throw new Error("no content?");
     const ret: undefined | string = Buffer.from(response.content as string, "base64").toString();
+    console.log(ret);
 
     return ret;
   },
