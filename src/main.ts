@@ -4,8 +4,8 @@ import express from "express";
 import type { Request, Response } from "express"
 const app = express();
 app.use(express.json())
-app.post("/push", (req: Request, res: Response) => {
-  const content = githook.getBlog();
+app.post("/push", async (req: Request, res: Response) => {
+  const content = await githook.getBlog();
   console.log(content)
 
 })
