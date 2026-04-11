@@ -5,7 +5,8 @@ import type { Request, Response } from "express"
 const app = express();
 app.use(express.json())
 app.post("/push", (req: Request, res: Response) => {
-  console.log(req.body)
+  const content = githook.getBlog();
+  console.log(content)
 
 })
 const port = 4040;
@@ -34,7 +35,7 @@ async function main(): Promise<void> {
 
 }
 if (process.argv[1] == fileURLToPath(import.meta.url)) {
-  process.loadEnvFile(".env")
+
   await main();
 
 

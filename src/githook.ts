@@ -1,15 +1,17 @@
+process.loadEnvFile(".env")
 import { env } from "node:process";
 import { Octokit, App } from "octokit";
 import { publicIpv4 } from "public-ip"
 import { RequestError } from "@octokit/request-error"
 import type { Endpoints, OctokitResponse } from "@octokit/types"
 type responseGitHooks = Endpoints["POST /repos/{owner}/{repo}/hooks"]["response"]
+type requestContent = Endpoints["GET /repos/{owner}/{repo}/contents/{path}"]["response"]
 type githook_t =
   {
     _octokit: Octokit;
     _owner: undefined | string;
-    _alreadyExist: () => boolean;
     _repo: string | null;
+    getBlog: () => Promise<string | undefined>;
     initGithook: (repo: string) => Promise<void>;
     existRepo: () => Promise<any>;
     getOwner: () => void;
@@ -17,24 +19,25 @@ type githook_t =
   };
 const githook: githook_t
   = {
-  _octokit: new Octokit({ auth: "" }),
+  _octokit: new Octokit({ auth: env.AUTH }),
   _owner: undefined,
   _repo: null,
-  _alreadyExist: function () {
-    /*    const response = await this._octokit.request(
-          "GET ",
-          {}
-        );
-      */
-    return false;
-  },
 
+  getBlog: async function (): Promise<string | undefined> {
+    const response: OctokitResponse<requestContent> = await this._octokit.request(
+      `GET /repos/${this._owner}/${this._repo}/content/${env.BLOG_FILE} `
+    );
+    if (!("content" in response))
+      throw new Error("no content?");
+    const ret: undefined | string = Buffer.from(response.content as string, "base64").toString();
+
+    return ret;
+  },
 
   initGithook: async function (repo: string) {
     this._repo = repo;
     this.getOwner();
     await this.existRepo();
-
   },
   createWebHook: async function (): Promise<OctokitResponse<responseGitHooks> | null> {
     let response: OctokitResponse<responseGitHooks> | null = null;
@@ -60,9 +63,10 @@ const githook: githook_t
     }
     catch (err) {
       if (err instanceof RequestError) {
-        if (err.status === 422) {
+        if (err.status === 422)
           console.log("hook already made procceeding")
-        }
+        else
+          throw err;
       }
     }
     return response;
@@ -83,7 +87,5 @@ const githook: githook_t
     );
     return response;
   }
-
-
 }
 export default githook; 
