@@ -30,6 +30,7 @@ const githook: githook_t
       {
         owner: this._owner,
         repo: this._repo,
+        path: env.BLOG
       }
     );
     if (!("content" in response))
