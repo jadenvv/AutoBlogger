@@ -35,13 +35,9 @@ async function main(): Promise<void> {
   await githook.createWebHook();
 
 }
-if (process.argv[1] == fileURLToPath(import.meta.url)) {
-
+if (process.argv[1] == fileURLToPath(import.meta.url))
   await main();
 
-
-
-}
 app.listen(4040, () => {
   console.log(`app listening ${port}`)
 
