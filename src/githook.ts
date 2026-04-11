@@ -30,7 +30,10 @@ const githook: githook_t
       {
         owner: this._owner,
         repo: this._repo,
-        path: env.BLOG
+        path: env.BLOG,
+        headers: {
+          'X-GitHub-Api-Version': '2026-03-10'
+        }
       }
     );
     if (!("content" in response))
