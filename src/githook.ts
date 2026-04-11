@@ -24,13 +24,13 @@ const githook: githook_t
   _repo: null,
 
   getBlog: async function (): Promise<string | undefined> {
+    console.log(env.BLOG)
     const response: OctokitResponse<requestContent> = await this._octokit.request(
-      `GET /repos/${this._owner}/${this._repo}/content/${env.BLOG_FILE} `
+      `GET /repos/${this._owner}/${this._repo}/content/${env.BLOG} `
     );
     if (!("content" in response))
       throw new Error("no content?");
     const ret: undefined | string = Buffer.from(response.content as string, "base64").toString();
-    console.log(ret);
 
     return ret;
   },
