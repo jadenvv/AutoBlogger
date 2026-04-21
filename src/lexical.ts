@@ -9,22 +9,37 @@ const tokens = {
   author: "author",
   list: "list",
   num: "#",
+<<<<<<< HEAD
+=======
+  quotation: "\"", 
+>>>>>>> a4389e573afc67aefc9fd20e3cc21eb881bf30af
   text: "<TEXT>",
   unidentified: undefined,
-
 } as const;
 
 type token = typeof tokens[keyof typeof tokens]
+<<<<<<< HEAD
 function lookAhead(): string {
 
 
+=======
+type char<S extends string> = S extends `${infer One}${infer Rest}` 
+	? (Rest extends "" ? S:never )
+	: never; 
+function lookAhead<T extends string>(str: string ) : char<T>{
+	return str.charAt(1) ;
+>>>>>>> a4389e573afc67aefc9fd20e3cc21eb881bf30af
 }
 function processTok(slice: string): { tok: token, index: number } {
-  const ret: token | null = null;
+  const ret: {tok: token, index: number }| null = null;
 
   switch (current) {
     case ':':
-      ret.push(tokens.colon);
+      return 
+      break; 
+    case '\"':
+	ret
+	break; 	
 
     case ' ':
       const tmp: string | undefined = file.slice(prev, index + 1);
