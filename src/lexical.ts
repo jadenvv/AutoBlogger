@@ -9,13 +9,13 @@ const tokens = {
   author: "author",
   list: "list",
   num: "#",
-  text: "<TEXT>"
+  text: "<TEXT>",
   unidentified: undefined,
 
 } as const;
 
 type token = typeof tokens[keyof typeof tokens]
-function lookAhead() {
+function lookAhead(): string {
 
 
 }
